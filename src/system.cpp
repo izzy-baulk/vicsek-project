@@ -6,6 +6,8 @@ System::System(int particleNumber,double sideLength, double timeStep,double nois
   std::cout << "I am constructing the System!";
   this->particleNumber = particleNumber;
   this->noiseStrength = noiseStrength;
+  this->timeStep = timeStep;
+  this->timeStep = timeStep;
 
 }
 

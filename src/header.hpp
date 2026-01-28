@@ -10,6 +10,8 @@ class System {
     System(int particleNumber,double sideLength, double timeStep,double noiseStrength);
     int   particleNumber;
     double noiseStrength;
+    double sideLength;
+    double timeStep;
     // Box simulationBox;
     // std::vector<Particle> particles;
 
