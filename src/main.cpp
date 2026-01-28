@@ -1,5 +1,9 @@
 #include <iostream>
+#include "header.hpp"
 
 int main(){
-    return 0;
+    System mySystem(100,20,0.5,0.1);
+    mySystem.updateRule();
+
+    std::cout << "\n" << mySystem.noiseStrength << "\n" << mySystem.particleNumber;
 }
