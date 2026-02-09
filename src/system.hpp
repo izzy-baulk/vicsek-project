@@ -17,9 +17,11 @@ class System {
     std::vector<Particle> particles;
     std::mt19937 gen;
     std::uniform_real_distribution<double> uniformDist;
-    double uniform(double min, double max);
 
+    double uniform(double min, double max);
+    void randomStart();
     void updateRule();
+    void saveConfig(std::string &filename);
 };
 
 #endif
