@@ -1,15 +1,20 @@
 #include "particle.hpp"
 #include <iostream>
 
-Particle::Particle(){
-    // an empty constructor
+// This is the one called by particles.resize()
+Particle::Particle() {
+  this->x = 0.0;
+  this->y = 0.0;
+  this->theta = 0.0;
+  this->r = 1.0;  // Standard Vicsek radius is usually 1.0
+  this->v = 1;  // Standard Vicsek velocity
 }
+
+// Use the arguments passed to the constructor!
 Particle::Particle(double x, double y, double theta, double r, double v) {
-  // whatever we want to do as we instantiate the system
-  std::cout << "I am constructing the particle!";
-  this->x = 0;
-  this->y = 0;
-  this->theta = 0;
-  this->r = 0.1;
-  this->v = 0.5;
+  this->x = x;
+  this->y = y;
+  this->theta = theta;
+  this->r = r;
+  this->v = v;
 }

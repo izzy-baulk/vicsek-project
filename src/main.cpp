@@ -1,9 +1,11 @@
 #include <iostream>
+#include <cstdlib>
 #include "system.hpp"
 #include "box.hpp"
 
-int main(){
-    System mySystem(100,20,0.5,0.1,42);
+int main(int argc, char* argv[]){
+    double noiseStrength = std::stof(argv[1]);
+    System mySystem(500,20,1,noiseStrength,42);
     mySystem.randomStart();
 
     std::cout << "\n" << mySystem.noiseStrength << "\n" << mySystem.particleNumber << "\n";
@@ -13,7 +15,7 @@ int main(){
     std::string initf("init.conf");
     mySystem.saveConfig(initf);
 
-    for (int i = 0; i < 100; i++){
+    for (int i = 0; i < 500; i++){
         mySystem.updateRule();
         std::string s = std::to_string(i);
         std::string filename = "output/" + s;

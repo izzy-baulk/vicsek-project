@@ -32,49 +32,35 @@ void System::updateRule(){
   double Lx = this->simulationBox.getSidex();
   double Ly = this->simulationBox.getSidey();
 
-  for (int i = 0; i < particleNumber; i++){
+  for (int i = 0; i < particleNumber; i++) {
+    double sum_cos = 0; 
+    double sum_sin = 0;
 
-      int count = 1;
+    // We include particle 'i' in its own average by iterating j from 0 to particleNumber
+    for (int j = 0; j < particleNumber; j++) {
+        double dx = particles[j].x - particles[i].x;
+        double dy = particles[j].y - particles[i].y;
 
-      // COMPLETE HERE
-      // get cosine and sine sums of the angle of particle i and its neighbours
-      double sum_cos = std::cos(particles[i].theta);
-      double sum_sin = std::sin(particles[i].theta);
+        // Periodic Boundary Condition (PBC) for distance
+        if (dx > Lx * 0.5)  dx -= Lx;
+        if (dx < -Lx * 0.5) dx += Lx;
+        if (dy > Ly * 0.5)  dy -= Ly;
+        if (dy < -Ly * 0.5) dy += Ly;
+
+        double distSq = dx*dx + dy*dy;
+        
+        // Use squared distance comparison to save computation (no sqrt needed)
+        if (distSq < (particles[i].r * particles[i].r)) {
+            sum_cos += std::cos(particles[j].theta);
+            sum_sin += std::sin(particles[j].theta);
+        }
+    }
+
+      // atan2 handles the normalization/averaging internally
+      double avg_theta = std::atan2(sum_sin, sum_cos);
       
-      for (int j = 0 ; j < particleNumber; j++){
-
-          if (i!=j){
-              // calculate distance
-              double dx = particles[j].x - particles[i].x;
-              double dy = particles[j].y - particles[i].y;
-
-              // periodic boundaries
-              if(dx>Lx*0.5) dx-=Lx;
-              if(dx<-Lx*0.5) dx+=Lx;
-              if(dy>Ly*0.5) dy-=Ly;
-              if(dy<-Ly*0.5) dy+=Ly;
-              
-              // calculate the distance between the two particles
-              double dist = std::sqrt(dx*dx + dy*dy);
-          
-                // check if the distance is below the interaction radius
-                if (dist < particles[i].r){
-                  // accumulate orientation components from neighbour j
-                  sum_cos +=  std::cos(particles[j].theta);
-                  sum_sin +=  std::sin(particles[j].theta);
-                  count+=1;
-                }
-          }
-      }
-      
-      //COMPLETE HERE
-        // normalise sine and cosine to get the local average
-        sum_sin /= count;
-        sum_cos /= count;
-
-        // average + noise
-        double avg_theta = std::atan2(sum_sin, sum_cos);
-        new_theta[i] = avg_theta + this->noiseStrength*this->uniform(-M_PI,M_PI);
+      // Apply noise: eta * random_angle
+      new_theta[i] = avg_theta + (this->noiseStrength * this->uniform(-M_PI, M_PI));
   }
   // move the particles
   for (int i = 0; i < particleNumber; i++){
